@@ -5,7 +5,8 @@
 		var defaults = {
 			width		: null,
 			height		: null,
-			numSlide	: null
+			numSlide	: null,
+			auto		: false
 		};
 
 		var settings = $.extend({}, defaults, options);
@@ -57,26 +58,54 @@
 
 			// slide effect
 			var numClick = 0;
+			var countMove = 0;
 
 			$(this).click(function(){
+				numClick = countMove + numClick;
 				$(this).find('li').each(function(index){
 
 					var currentPosition = $(this).position().left;
-
 					if ( numClick < settings.numSlide - 1 ) {
-						$(this).animate({
-							'left': currentPosition - settings.width
-						});
+						$(this).stop().animate({'left': currentPosition - settings.width});
 					} else {
-						$(this).animate({'left': index * settings.width});
+						$(this).stop().animate({'left': index * settings.width});
 					}
 				});
 
 				if ( numClick < settings.numSlide - 1 )
 					numClick++;
-				else
+				else {
+					countMove = 0;
 					numClick = 0;
+				}
 			});
+
+			// automatically
+			if ( settings.auto ) {
+
+				var that = this;
+				var autoSlide = setInterval( function(){
+
+					countMove = countMove + numClick;
+					$(that).find('li').each(function(index){
+						var currentPosition = $(this).position().left;
+						
+						if ( countMove < settings.numSlide - 1 ) {
+							$(this).stop().animate({'left': currentPosition - settings.width});
+						} else {
+							$(this).stop().animate({'left': index * settings.width});
+						}
+					});
+					if ( countMove < settings.numSlide - 1 ) {
+						countMove++;
+					} else {
+						countMove = 0;
+						numClick = 0;
+					}
+
+				}, settings.auto );
+			}
+
 		});
 	};
 })(jQuery);
