@@ -4,7 +4,8 @@ TSlider
 
 # usage
 <code>
-jQuery(document).ready(function($){
-	$('.wrap').TSlider();
-});
+$('.wrap').TSlider();
 </code>
+
+# Work on
+Moderm browsers, IE >= 7
